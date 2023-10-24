@@ -7,3 +7,7 @@ export const create = async( payload: PostInput ): Promise<PostOutput> => {
 export const getPostById = async( id: string ): Promise<PostOutput | null> => {
     return Post.findByPk( id );
 }
+
+export const getAll = async(): Promise<PostOutput[]> => {
+    return Post.findAll();
+}

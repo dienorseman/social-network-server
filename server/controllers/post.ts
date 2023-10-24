@@ -1,9 +1,27 @@
 import { Response, Request } from 'express';
-import { create, getPostById } from '../services/postService';
+import { create, getAll, getPostById } from '../services/postService';
+import { getById } from '../services/accountService';
 
 export const getPosts = async (req: Request, res: Response) => {
-    res.json({
-        msg: 'getPosts',
+    const posts = await getAll();
+
+    const formattedPosts = await Promise.all(
+        posts.map(async (post) => {
+            const account = await getById(post.owner);
+            return {
+                id: post.id,
+                title: post.title,
+                content: post.content,
+                createdAt: post.createdAt,
+                updatedAt: post.updatedAt,
+                ownerId: post.owner,
+                owner: account?.username,
+            };
+        })
+    );
+
+    res.status(200).json({
+        posts: formattedPosts,
     });
 };
 
@@ -38,8 +56,7 @@ export const createPost = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: 'Error',
-            error: error,
+            error: 'Talk to the administrator',
         });
     }
 };

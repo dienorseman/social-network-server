@@ -15,7 +15,17 @@ interface PostAttributes {
 
 export interface PostInput extends Optional<PostAttributes, 'id' | 'visible'> {}
 
-export interface PostOutput extends Required<PostAttributes> {}
+export interface PostOutput extends Required<PostAttributes> {
+    id: string;
+    visible: boolean;
+    title: string;
+    content: string;
+    owner: string;
+
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
+}
 
 class Post extends Model<PostAttributes, PostInput> implements PostAttributes {
     public id!: string;
@@ -49,7 +59,7 @@ Post.init(
             field: 'Title',
         },
         content: {
-            type: DataTypes.STRING(500),
+            type: DataTypes.STRING,
             allowNull: false,
             field: 'Content',
         },
@@ -58,13 +68,27 @@ Post.init(
             allowNull: false,
             field: 'Owner',
         },
+        createdAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+            field: 'CreatedAt',
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+            field: 'UpdatedAt',
+        },
+        deletedAt: {
+            type: DataTypes.DATE,
+            allowNull: true,
+            field: 'DeactivatedAt',
+        },
     },
     {
         paranoid: true,
         timestamps: true,
-        createdAt: 'CreatedAt',
-        updatedAt: 'UpdatedAt',
-        deletedAt: 'DeactivatedAt',
         tableName: 'Post',
         sequelize: db,
     }

@@ -54,7 +54,7 @@ class Server {
                 db.config.host,
                 db.config.port
             );
-            await db.sync();
+            await db.sync({ force: false });
         } catch (error: unknown) {
             throw new Error(error as string | undefined);
         }

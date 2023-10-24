@@ -27,6 +27,10 @@ class Account extends Model<AccountAttributes, AccountInput> implements AccountA
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
     public readonly deletedAt!: Date;
+
+    public static async findbyId(id: string) {
+        return Account.findByPk(id);
+    }
 }
 
 Account.init(
@@ -60,12 +64,25 @@ Account.init(
             defaultValue: true,
             field: 'Active',
         },
+        createdAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+            field: 'CreatedAt',
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+            field: 'UpdatedAt',
+        },
+        deletedAt: {
+            type: DataTypes.DATE,
+            field: 'DeactivatedAt',
+        },
     },
     {
         paranoid: true,
-        createdAt: 'CreatedAt',
-        updatedAt: 'UpdatedAt',
-        deletedAt: 'DeactivatedAt',
         tableName: 'Account',
         sequelize: db,
     }
